@@ -1,1 +1,2 @@
-# OPPS-LAB
+# OOPS-LAB
+MIT Manipal
