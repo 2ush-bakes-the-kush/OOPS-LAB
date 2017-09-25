@@ -1,33 +1,76 @@
 import java.util.Scanner;
 
-class Student_Detail{
-    String name,id;
-    static String college_name="MIT";
-    Student_Detail(String a,String b){ 
+class Student{
+    String name,reg,age;
+    Student(String a,String b,String c){
         name=a;
-        id=b;
+        reg=b;
+        age=c;
     }
-    void display_details(){
-       System.out.println("Name\tId\t\tCollege");
-       System.out.println(name+"\t"+id+"\t"+college_name);
+}
+class UGStudent extends Student{
+    int sem,fee;
+    UGStudent(String a, String b, String c,int d) {
+        super(a, b, c);
+        sem=d;
+    }
+    double fees(){
+        if(sem==1||sem==2)
+            fee=100000;
+        else if(sem==3||sem==4)
+            fee=200000;
+        else if(sem==5||sem==6)
+            fee=250000;
+        else if(sem==7||sem==8)
+            fee=300000;
+        else
+            ;
+        return fee;
+    }
+    void display(){
+        System.out.println("Name\tRegistration No\t\tAge\tCourse\tSemester\tFees");
+        System.out.println(super.name+"\t"+super.reg+"\t\t"+super.age+"\t UG\t"+sem+"\t\t"+fees());
+    }
+}
+class PGStudent extends Student{
+    int sem,fees;
+    PGStudent(String a, String b, String c,int d) {
+        super(a, b, c);
+        sem=d;
+    }
+    double fee(){
+        if(sem==1||sem==2)
+            fees=200000;
+        else if(sem==3||sem==4)
+            fees=300000;
+     return fees;
+    }
+    void display(){
+         System.out.println("Name\tRegistration No\t\tAge\tCourse\tSemester\tFees");
+        System.out.println(super.name+"\t"+super.reg+"\t\t"+super.age+"\t PG\t"+sem+"\t\t"+fee());
     }
 }
 class StudenMain {
     public static void main(String args[]){
         Scanner br=new Scanner(System.in);
-        int n;
-        String name, id;
-        System.out.print("Enter the number of students:");
-        n=br.nextInt();
-        Student_Detail obj[]=new Student_Detail[n];
-        for(int i=0;i<n;i++){
-            System.out.println("Enter the name and ID of Student "+(i+1));
-            name=br.next();
-            id=br.next();
-            obj[i]=new Student_Detail(name,id);
+        String n,r,a,type;
+        int sem;
+        System.out.print("Enter the name registration number and age of the student: ");
+        n=br.next();
+        r=br.next();
+        a=br.next();
+        System.out.print("Enter PG or UG course and the semester of study: ");
+        type=br.next();
+        sem=br.nextInt();
+        if(type.equalsIgnoreCase("UG")){
+             UGStudent obj=new UGStudent(n,r,a,sem);
+             obj.display();
         }
-        for(int i=0;i<n;i++){
-            obj[i].display_details();
+        else if(type.equalsIgnoreCase("PG")){
+             PGStudent obj=new PGStudent(n,r,a,sem);
+             obj.display();
         }
-    }   
+        else
+            System.out.print("Invalid Entry");
+    }
 }
