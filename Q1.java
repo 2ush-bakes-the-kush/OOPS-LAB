@@ -1,33 +1,78 @@
 
-import java.util.Scanner;
-public class Q1 {
-    public static void main (String args[])
-    {
-        Scanner in=new Scanner(System.in);
-        String str, s;
-        System.out.println("Enter a string:");
-        str=in.nextLine();
-        int i,n,j,k,l,count;count=0; k=0; n=0;
-        i=str.length();
-        for(j=0;j<i;j++)
-        {
-            if(str.charAt(j)== ' ' || str.charAt(j)== '.' )
-                count++;
+class  Q
+ {     
+    int  n;
+    boolean   valueSet = false;
+    synchronized  int  get() 
+    {	
+        if(!valueSet)
+	try
+	{     
+            wait();     
         }
-        for(j=0;j<i;j++)
-        {
-            if(str.charAt(j)== '.')
-                n++;
-        }
-         System.out.println("The no of characters in the String: "+(i-count));
-         System.out.println("The no of lines: "+(n));
-         System.out.println("The no of words "+(count));
-         for(j=0;j<i;j++)
-         {
-             if(str.charAt(j)=='a'|| str.charAt(j)=='e'|| str.charAt(j)=='i'|| str.charAt(j)=='o'|| str.charAt(j)=='u' ||str.charAt(j)=='A'||str.charAt(j)=='E'||str.charAt(j)=='I'||str.charAt(j)=='O'||str.charAt(j)=='U')
-              k++;   
-         }
-         System.out.println("The no of vowels "+k);
+	catch(InterruptedException   e) 
+	{      
+            System.out.println("Exception ");     
+        }   
+            System.out.println("Got: " + n);
+            valueSet = false;
+            notify();
+            return  n;
     }
-    
+    synchronized  void  put(int   n) 
+    {      
+        if(valueSet)
+	try
+	{        
+            wait();     
+        }
+        catch(InterruptedException   e) 
+	{        
+            System.out.println("Exception");    
+        }        
+            this.n = n;
+            valueSet = true;
+            System.out.println("Put: " + n);
+            notify();
+    } 
+}
+class  Producer  implements   Runnable 
+{
+    Q   q;
+    Producer(Q  q) 
+    {
+	this.q = q;
+	new  Thread(this, "Producer").start();
+    }   
+    @Override
+    public  void  run() 
+    {
+	int   i = 0;
+	while(true && i<6)
+            q.put(i++);
+    }
+}
+class  Consumer  implements  Runnable 
+{
+    Q   q;
+    Consumer(Q   q) 
+    {
+	this.q = q;
+	new  Thread(this, "Consumer").start();
+    }
+    public   void   run() 
+    {
+	while(true) 
+            q.get();
+	
+    }
+}
+public class Q1 
+{
+    public static void main(String[] args) 
+    {
+        Q   q = new   Q();
+        Producer producer = new   Producer(q);
+        Consumer consumer = new   Consumer(q);
+    }    
 }
